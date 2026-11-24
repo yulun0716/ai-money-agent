@@ -78,7 +78,31 @@ export default {
           detail: error.message
         }, { status: 500 });
       }
-    }
+    }if (url.pathname === "/quests") {
+  return Response.json({
+    status: "success",
+    module: "Solana Quest Explorer",
+    version: "1.1",
+    platforms: [
+      {
+        name: "Galxe",
+        website: "https://app.galxe.com/",
+        type: "Quest & Campaign"
+      },
+      {
+        name: "Layer3",
+        website: "https://layer3.xyz/",
+        type: "Crypto Quest"
+      },
+      {
+        name: "Zealy",
+        website: "https://zealy.io/",
+        type: "Community Quest"
+      }
+    ],
+    message: "Solana Quest Explorer is ready!"
+  });
+}
 
     return Response.json(
       { error: "Not Found" },
