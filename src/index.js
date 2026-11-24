@@ -124,6 +124,45 @@ if (url.pathname === "/quests") {
   });
 }
 
+if (url.pathname === "/quest-sources") {
+  const sources = [
+    {
+      platform: "Galxe",
+      website: "https://app.galxe.com/",
+      data_status: "not_connected",
+      access: "API 權限待確認",
+      api_key_required: "待確認",
+      live_data: false
+    },
+    {
+      platform: "Layer3",
+      website: "https://layer3.xyz/",
+      data_status: "not_connected",
+      access: "公開資料來源待確認",
+      api_key_required: "待確認",
+      live_data: false
+    },
+    {
+      platform: "Zealy",
+      website: "https://zealy.io/",
+      data_status: "not_connected",
+      access: "需要社群 API 權限",
+      api_key_required: true,
+      live_data: false
+    }
+  ];
+
+  return Response.json({
+    status: "success",
+    module: "Quest Source Manager",
+    version: "2.1",
+    total_sources: sources.length,
+    connected_sources: 0,
+    sources,
+    message: "Quest source management is ready."
+  });
+}
+
     return Response.json(
       { error: "Not Found" },
       { status: 404 }
