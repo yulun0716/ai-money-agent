@@ -68,7 +68,7 @@ export default {
           status: "success",
           model: "GLM-4.7-Flash",
           question: prompt,
-          raw_result: result
+          answer: result.choices?.[0]?.message?.content ?? "AI 暫時沒有產生回答"
         });
 
       } catch (error) {
