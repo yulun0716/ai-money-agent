@@ -2,5 +2,8 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ai-money-agent",
   "main": "src/index.js",
-  "compatibility_date": "2026-11-24"
+  "compatibility_date": "2026-11-24",
+  "ai": {
+    "binding": "AI"
+  }
 }
