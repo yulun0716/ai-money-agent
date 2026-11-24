@@ -163,6 +163,7 @@ if (url.pathname === "/quest-sources") {
   });
 }
 
+
 if (url.pathname === "/quest-search") {
   const q = (url.searchParams.get("q") || "").toLowerCase().trim();
   const platform = (url.searchParams.get("platform") || "").toLowerCase().trim();
@@ -216,9 +217,19 @@ if (url.pathname === "/quest-search") {
       platform: "Layer3",
       title: "Deposit SOL Campaign",
       category: "DeFi",
-      cost_type: "deposit",
+      cost_type: "deposit_required",
       reward_type: "token",
       website: "https://layer3.xyz/"
+    },
+    {
+      id: "solana-006",
+      project: "Solana",
+      platform: "Galxe",
+      title: "On-chain Transaction Campaign",
+      category: "Ecosystem",
+      cost_type: "gas_required",
+      reward_type: "points",
+      website: "https://app.galxe.com/"
     }
   ];
 
@@ -230,8 +241,11 @@ if (url.pathname === "/quest-search") {
     const categoryMatch = !category || quest.category.toLowerCase() === category;
 
     const capitalMatch =
-      capital !== "zero" ||
-      quest.cost_type === "free";
+      capital === "all" ||
+      (capital === "zero" && quest.cost_type === "free") ||
+      (capital === "gas" && quest.cost_type === "gas_required") ||
+      (capital === "deposit" && quest.cost_type === "deposit_required") ||
+      (capital === "unknown" && quest.cost_type === "unknown");
 
     return keywordMatch && platformMatch && categoryMatch && capitalMatch;
   });
@@ -239,16 +253,23 @@ if (url.pathname === "/quest-search") {
   return Response.json({
     status: "success",
     module: "Zero Capital Quest Search",
-    version: "2.0",
+    version: "3.2",
     search: { q, platform, category, capital },
     total: results.length,
     capital_filter: capital,
+    cost_categories: {
+      free: "不需要本金及 Gas Fee",
+      gas_required: "不需要本金，但需要支付 Gas Fee",
+      deposit_required: "需要存款、質押或購買資產",
+      unknown: "成本資料不足，尚未確認"
+    },
     live_data: false,
     data_type: "demo_only",
     results,
-    message: "Zero capital quest filtering is ready. Live data integration is pending."
+    message: "Quest cost classification is ready. Live data integration is pending."
   });
 }
+
 
 
 
