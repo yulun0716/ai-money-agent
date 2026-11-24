@@ -163,6 +163,62 @@ if (url.pathname === "/quest-sources") {
   });
 }
 
+if (url.pathname === "/quest-search") {
+  const q = (url.searchParams.get("q") || "").toLowerCase().trim();
+  const platform = (url.searchParams.get("platform") || "").toLowerCase().trim();
+  const category = (url.searchParams.get("category") || "").toLowerCase().trim();
+
+  const demoQuests = [
+    {
+      id: "solana-001",
+      project: "Solana",
+      platform: "Galxe",
+      title: "Solana Quest Explorer",
+      category: "Ecosystem",
+      website: "https://app.galxe.com/"
+    },
+    {
+      id: "solana-002",
+      project: "Solana",
+      platform: "Layer3",
+      title: "Solana Learning Quest",
+      category: "Learning",
+      website: "https://layer3.xyz/"
+    },
+    {
+      id: "solana-003",
+      project: "Solana",
+      platform: "Zealy",
+      title: "Solana Community Quest",
+      category: "Community",
+      website: "https://zealy.io/"
+    }
+  ];
+
+  const results = demoQuests.filter((quest) => {
+    const text = `${quest.project} ${quest.platform} ${quest.title} ${quest.category}`.toLowerCase();
+
+    return (
+      (!q || text.includes(q)) &&
+      (!platform || quest.platform.toLowerCase() === platform) &&
+      (!category || quest.category.toLowerCase() === category)
+    );
+  });
+
+  return Response.json({
+    status: "success",
+    module: "Solana Quest Search",
+    version: "1.0",
+    search: { q, platform, category },
+    total: results.length,
+    live_data: false,
+    data_type: "demo_only",
+    results,
+    message: "Search engine is ready. Live data integration is pending."
+  });
+}
+
+
     return Response.json(
       { error: "Not Found" },
       { status: 404 }
