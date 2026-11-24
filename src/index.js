@@ -167,6 +167,7 @@ if (url.pathname === "/quest-search") {
   const q = (url.searchParams.get("q") || "").toLowerCase().trim();
   const platform = (url.searchParams.get("platform") || "").toLowerCase().trim();
   const category = (url.searchParams.get("category") || "").toLowerCase().trim();
+  const capital = (url.searchParams.get("capital") || "zero").toLowerCase().trim();
 
   const demoQuests = [
     {
@@ -175,6 +176,8 @@ if (url.pathname === "/quest-search") {
       platform: "Galxe",
       title: "Solana Quest Explorer",
       category: "Ecosystem",
+      cost_type: "unknown",
+      reward_type: "points",
       website: "https://app.galxe.com/"
     },
     {
@@ -183,6 +186,8 @@ if (url.pathname === "/quest-search") {
       platform: "Layer3",
       title: "Solana Learning Quest",
       category: "Learning",
+      cost_type: "unknown",
+      reward_type: "points",
       website: "https://layer3.xyz/"
     },
     {
@@ -191,32 +196,60 @@ if (url.pathname === "/quest-search") {
       platform: "Zealy",
       title: "Solana Community Quest",
       category: "Community",
+      cost_type: "unknown",
+      reward_type: "points",
       website: "https://zealy.io/"
+    },
+    {
+      id: "solana-004",
+      project: "Solana",
+      platform: "Layer3",
+      title: "Free Learning Campaign",
+      category: "Learning",
+      cost_type: "free",
+      reward_type: "token",
+      website: "https://layer3.xyz/"
+    },
+    {
+      id: "solana-005",
+      project: "Solana",
+      platform: "Layer3",
+      title: "Deposit SOL Campaign",
+      category: "DeFi",
+      cost_type: "deposit",
+      reward_type: "token",
+      website: "https://layer3.xyz/"
     }
   ];
 
   const results = demoQuests.filter((quest) => {
     const text = `${quest.project} ${quest.platform} ${quest.title} ${quest.category}`.toLowerCase();
 
-    return (
-      (!q || text.includes(q)) &&
-      (!platform || quest.platform.toLowerCase() === platform) &&
-      (!category || quest.category.toLowerCase() === category)
-    );
+    const keywordMatch = !q || text.includes(q);
+    const platformMatch = !platform || quest.platform.toLowerCase() === platform;
+    const categoryMatch = !category || quest.category.toLowerCase() === category;
+
+    const capitalMatch =
+      capital !== "zero" ||
+      quest.cost_type === "free";
+
+    return keywordMatch && platformMatch && categoryMatch && capitalMatch;
   });
 
   return Response.json({
     status: "success",
-    module: "Solana Quest Search",
-    version: "1.0",
-    search: { q, platform, category },
+    module: "Zero Capital Quest Search",
+    version: "2.0",
+    search: { q, platform, category, capital },
     total: results.length,
+    capital_filter: capital,
     live_data: false,
     data_type: "demo_only",
     results,
-    message: "Search engine is ready. Live data integration is pending."
+    message: "Zero capital quest filtering is ready. Live data integration is pending."
   });
 }
+
 
 
 if (url.pathname === "/quest-analyze") {
