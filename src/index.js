@@ -78,29 +78,49 @@ export default {
           detail: error.message
         }, { status: 500 });
       }
-    }if (url.pathname === "/quests") {
+    }
+
+if (url.pathname === "/quests") {
+  const quests = [
+    {
+      id: "solana-001",
+      project: "Solana",
+      platform: "Galxe",
+      title: "Solana Quest Explorer",
+      category: "Ecosystem",
+      cost: "待確認",
+      status: "待探索",
+      website: "https://app.galxe.com/"
+    },
+    {
+      id: "solana-002",
+      project: "Solana",
+      platform: "Layer3",
+      title: "Solana Learning Quest",
+      category: "Learning",
+      cost: "待確認",
+      status: "待探索",
+      website: "https://layer3.xyz/"
+    },
+    {
+      id: "solana-003",
+      project: "Solana",
+      platform: "Zealy",
+      title: "Solana Community Quest",
+      category: "Community",
+      cost: "待確認",
+      status: "待探索",
+      website: "https://zealy.io/"
+    }
+  ];
+
   return Response.json({
     status: "success",
     module: "Solana Quest Explorer",
-    version: "1.1",
-    platforms: [
-      {
-        name: "Galxe",
-        website: "https://app.galxe.com/",
-        type: "Quest & Campaign"
-      },
-      {
-        name: "Layer3",
-        website: "https://layer3.xyz/",
-        type: "Crypto Quest"
-      },
-      {
-        name: "Zealy",
-        website: "https://zealy.io/",
-        type: "Community Quest"
-      }
-    ],
-    message: "Solana Quest Explorer is ready!"
+    version: "2.0",
+    total: quests.length,
+    quests,
+    message: "Quest Explorer API is ready."
   });
 }
 
