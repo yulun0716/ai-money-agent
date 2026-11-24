@@ -219,6 +219,98 @@ if (url.pathname === "/quest-search") {
 }
 
 
+if (url.pathname === "/quest-analyze") {
+  try {
+    let quest;
+
+    if (request.method === "GET") {
+      quest = {
+        title: url.searchParams.get("title") || "",
+        platform: url.searchParams.get("platform") || "",
+        website: url.searchParams.get("website") || "",
+        description: url.searchParams.get("description") || "",
+        cost: url.searchParams.get("cost") || "",
+        requirements: url.searchParams.get("requirements") || ""
+      };
+    } else if (request.method === "POST") {
+      quest = await request.json();
+    } else {
+      return Response.json(
+        { error: "Method not allowed" },
+        { status: 405 }
+      );
+    }
+
+    if (!quest.title || !quest.title.trim()) {
+      return Response.json(
+        { error: "Please provide a quest title." },
+        { status: 400 }
+      );
+    }
+
+    const prompt = `
+請分析以下區塊鏈任務，並使用繁體中文提供風險評估報告。
+
+任務名稱：${quest.title}
+平台：${quest.platform || "未提供"}
+網站：${quest.website || "未提供"}
+任務說明：${quest.description || "未提供"}
+成本：${quest.cost || "未提供"}
+參與條件：${quest.requirements || "未提供"}
+
+請依照以下項目分析：
+1. 任務內容與參與方式
+2. 可能的時間成本
+3. 可能的金錢成本
+4. 錢包連接與簽名風險
+5. 專案可信度與資料完整度
+6. 是否值得進一步研究
+7. 最後給出風險等級：低、中、高或資料不足
+
+重要規則：
+- 只能根據提供的資料分析，不可假裝已查證官方活動。
+- 不可自行編造獎勵、代幣、截止日期或空投資格。
+- 不確定的資訊必須明確標示「尚未確認」。
+- 不保證空投、獲利或投資報酬。
+- 提醒使用者不要提供助記詞或私鑰。
+- 不要建議使用者盲目簽署錢包交易。
+`;
+
+    const result = await env.AI.run(
+      "@cf/zai-org/glm-4.7-flash",
+      {
+        messages: [
+          {
+            role: "system",
+            content: "你是 AI Money Agent 的區塊鏈任務研究分析師。請保持客觀、謹慎，使用繁體中文回答。"
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      }
+    );
+
+    return Response.json({
+      status: "success",
+      module: "Quest AI Analyzer",
+      model: "GLM-4.7-Flash",
+      live_verification: false,
+      quest,
+      analysis: result.choices?.[0]?.message?.content ?? "AI 暫時沒有產生分析結果"
+    });
+
+  } catch (error) {
+    return Response.json({
+      status: "error",
+      message: "Quest analysis failed",
+      detail: error.message
+    }, { status: 500 });
+  }
+}
+
+
     return Response.json(
       { error: "Not Found" },
       { status: 404 }
