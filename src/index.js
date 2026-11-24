@@ -68,7 +68,7 @@ export default {
           status: "success",
           model: "GLM-4.7-Flash",
           question: prompt,
-          answer: result.response
+          raw_result: result
         });
 
       } catch (error) {
